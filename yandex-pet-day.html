@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yandex Pet Day — конференция про digital в зообизнесе</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0F0E1A;
+    --indigo: #1C1B4B;
+    --amber: #FF9E1B;
+    --amber-light: #FFD08A;
+    --cream: #FFF8F0;
+    --muted: #7C7B8A;
+    --border: rgba(255,255,255,0.1);
+    --card-bg: rgba(255,255,255,0.04);
+    --font-display: 'Unbounded', sans-serif;
+    --font-body: 'Golos Text', sans-serif;
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--indigo);
+    color: #fff;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CURSOR PET */
+  #cursor {
+    position: fixed;
+    width: 28px; height: 28px;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s;
+    font-size: 22px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  }
+  #cursor-dot {
+    position: fixed;
+    width: 6px; height: 6px;
+    background: var(--amber);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    transition: transform 0.05s;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(28, 27, 75, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+  .nav__logo {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav__logo span { color: var(--amber); }
+  nav a.btn-nav {
+    background: var(--amber);
+    color: var(--ink);
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  nav a.btn-nav:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 40%, rgba(255,158,27,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 10% 80%, rgba(80,60,180,0.3) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero__grid-overlay {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+  .hero__meta {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+  }
+  .hero__meta::before {
+    content: '';
+    width: 24px; height: 2px;
+    background: var(--amber);
+    flex-shrink: 0;
+  }
+  .hero__title {
+    font-family: var(--font-display);
+    font-size: clamp(38px, 6vw, 80px);
+    font-weight: 900;
+    line-height: 1.05;
+    max-width: 820px;
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .hero__title em {
+    font-style: normal;
+    color: var(--amber);
+    position: relative;
+  }
+  .hero__sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: rgba(255,255,255,0.65);
+    max-width: 580px;
+    line-height: 1.6;
+    margin-bottom: 40px;
+    position: relative;
+  }
+  .hero__cta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 56px;
+    position: relative;
+  }
+  .btn-primary {
+    background: var(--amber);
+    color: var(--ink);
+    padding: 16px 36px;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+    box-shadow: 0 8px 32px rgba(255,158,27,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(255,158,27,0.45);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: #fff;
+    padding: 16px 36px;
+    border-radius: 100px;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary:hover {
+    border-color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.06);
+    transform: translateY(-2px);
+  }
+  .hero__note {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-left: 4px;
+    align-self: center;
+  }
+  /* Countdown */
+  .hero__countdown {
+    display: flex;
+    gap: 24px;
+    position: relative;
+  }
+  .countdown__item {
+    text-align: center;
+  }
+  .countdown__num {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    display: block;
+  }
+  .countdown__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.4);
+    margin-top: 4px;
+    display: block;
+  }
+  .countdown__divider {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--amber);
+    align-self: flex-start;
+    padding-top: 4px;
+    opacity: 0.6;
+  }
+  /* floating paw decorations */
+  .hero__paw {
+    position: absolute;
+    font-size: 80px;
+    opacity: 0.05;
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+  }
+  .hero__paw:nth-child(1) { right: 8%; top: 20%; animation-delay: 0s; font-size: 120px; }
+  .hero__paw:nth-child(2) { right: 18%; top: 60%; animation-delay: 2s; font-size: 60px; opacity: 0.03; }
+  .hero__paw:nth-child(3) { right: 4%; top: 70%; animation-delay: 4s; font-size: 40px; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+  }
+
+  /* SECTIONS COMMON */
+  section { padding: 100px 48px; }
+  .section__label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 16px;
+    display: block;
+  }
+  h2.section__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 4vw, 46px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 56px;
+    max-width: 720px;
+  }
+  h2.section__title em {
+    font-style: normal;
+    color: var(--amber);
+  }
+
+  /* ABOUT */
+  #about { background: rgba(0,0,0,0.15); }
+  .about-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .about-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amber), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .about-card:hover { border-color: rgba(255,158,27,0.3); transform: translateY(-4px); }
+  .about-card:hover::before { opacity: 1; }
+  .about-card__icon { font-size: 36px; margin-bottom: 16px; display: block; }
+  .about-card__title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+  .about-card__text { font-size: 15px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+  /* SPEAKERS */
+  #speakers { position: relative; }
+  .speakers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  .speaker-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative;
+  }
+  .speaker-card:hover { border-color: rgba(255,158,27,0.35); transform: translateY(-4px); }
+  .speaker-card__avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--amber-light), var(--amber));
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 8px 24px rgba(255,158,27,0.25);
+  }
+  .speaker-badge {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: rgba(255,158,27,0.15);
+    color: var(--amber);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.05em;
+  }
+  .speaker-card__name {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .speaker-card__role {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .speaker-card__topic {
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .speaker-card__topic strong { color: var(--amber); font-weight: 500; }
+
+  /* SCHEDULE */
+  #schedule { background: rgba(0,0,0,0.15); }
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    max-width: 780px;
+  }
+  .timeline__item {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background 0.2s;
+    border-radius: var(--radius-sm);
+    padding-left: 12px;
+    margin-left: -12px;
+  }
+  .timeline__item:hover { background: rgba(255,255,255,0.03); }
+  .timeline__item:last-child { border-bottom: none; }
+  .timeline__time {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--amber);
+    padding-top: 3px;
+    flex-shrink: 0;
+  }
+  .timeline__content {}
+  .timeline__title {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+  .timeline__speaker {
+    font-size: 13px;
+    color: rgba(255,255,255,0.45);
+  }
+  .timeline__tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+    background: rgba(255,158,27,0.12);
+    color: var(--amber);
+    margin-left: 8px;
+    vertical-align: middle;
+    letter-spacing: 0.05em;
+  }
+
+  /* FORMATS */
+  #formats {}
+  .formats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .format-card {
+    border-radius: var(--radius);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .format-card--offline {
+    background: linear-gradient(135deg, rgba(255,158,27,0.15) 0%, rgba(255,158,27,0.05) 100%);
+    border: 1px solid rgba(255,158,27,0.35);
+  }
+  .format-card--online {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+  }
+  .format-card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding: 6px 14px;
+    border-radius: 100px;
+  }
+  .format-card--offline .format-card__badge {
+    background: var(--amber);
+    color: var(--ink);
+  }
+  .format-card--online .format-card__badge {
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+  }
+  .format-card__title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .format-card__location {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 24px;
+  }
+  .format-card__features {
+    list-style: none;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .format-card__features li {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.5;
+  }
+  .format-card__features li::before {
+    content: '✓';
+    color: var(--amber);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .format-card__warning {
+    font-size: 13px;
+    color: rgba(255,158,27,0.8);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-format {
+    display: inline-block;
+    padding: 14px 32px;
+    border-radius: 100px;
+    font-weight: 600;
+    font-size: 15px;
+    text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .format-card--offline .btn-format {
+    background: var(--amber);
+    color: var(--ink);
+    box-shadow: 0 6px 24px rgba(255,158,27,0.3);
+  }
+  .format-card--offline .btn-format:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(255,158,27,0.45);
+  }
+  .format-card--online .btn-format {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .format-card--online .btn-format:hover {
+    background: rgba(255,255,255,0.18);
+    transform: translateY(-2px);
+  }
+
+  /* AUDIENCE */
+  #audience { background: rgba(0,0,0,0.15); }
+  .audience-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .audience-tag {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 12px 22px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+  }
+  .audience-tag:hover {
+    border-color: rgba(255,158,27,0.4);
+    background: rgba(255,158,27,0.07);
+    transform: translateY(-2px);
+  }
+  .audience-tag span { margin-right: 8px; }
+
+  /* FAQ */
+  #faq {}
+  .faq-list {
+    max-width: 720px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .faq-item.open { border-color: rgba(255,158,27,0.3); }
+  .faq-q {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    user-select: none;
+    gap: 16px;
+  }
+  .faq-q:hover { background: rgba(255,255,255,0.03); }
+  .faq-icon {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: transform 0.3s, border-color 0.3s;
+    color: var(--amber);
+  }
+  .faq-item.open .faq-icon { transform: rotate(45deg); border-color: var(--amber); }
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+  }
+  .faq-a-inner {
+    padding: 0 24px 20px;
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.65;
+  }
+  .faq-item.open .faq-a { max-height: 200px; }
+
+  /* REGISTER */
+  #register {
+    background: linear-gradient(135deg, rgba(255,158,27,0.1) 0%, rgba(28,27,75,0) 60%);
+    border-top: 1px solid var(--border);
+  }
+  .register-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .register__title {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 3.5vw, 44px);
+    font-weight: 700;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .register__title em { font-style: normal; color: var(--amber); }
+  .register__sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .register__perks {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .register__perks li {
+    font-size: 14px;
+    color: rgba(255,255,255,0.55);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .register__perks li::before { content: '—'; color: var(--amber); }
+  .register-form { display: flex; flex-direction: column; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 8px; }
+  .form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    letter-spacing: 0.05em;
+  }
+  .form-input {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    color: #fff;
+    font-family: var(--font-body);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-input::placeholder { color: rgba(255,255,255,0.25); }
+  .form-input:focus {
+    border-color: var(--amber);
+    background: rgba(255,158,27,0.06);
+  }
+  .radio-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    font-size: 15px;
+  }
+  .radio-label:has(input:checked) {
+    border-color: var(--amber);
+    background: rgba(255,158,27,0.08);
+  }
+  .radio-label input { accent-color: var(--amber); width: 16px; height: 16px; }
+  .form-submit {
+    background: var(--amber);
+    color: var(--ink);
+    border: none;
+    border-radius: 100px;
+    padding: 18px 40px;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 8px 32px rgba(255,158,27,0.3);
+    margin-top: 4px;
+  }
+  .form-submit:hover {
+    opacity: 0.88;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(255,158,27,0.45);
+  }
+  .form-legal {
+    font-size: 12px;
+    color: rgba(255,255,255,0.3);
+    line-height: 1.5;
+  }
+  .form-legal a { color: rgba(255,158,27,0.7); text-decoration: underline; }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .footer__logo {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+  }
+  .footer__logo span { color: var(--amber); }
+  .footer__links {
+    display: flex;
+    gap: 24px;
+  }
+  .footer__links a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer__links a:hover { color: rgba(255,255,255,0.7); }
+  .footer__copy {
+    font-size: 13px;
+    color: rgba(255,255,255,0.25);
+  }
+
+  /* STICKY CTA MOBILE */
+  .sticky-cta {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(15,14,26,0.95);
+    backdrop-filter: blur(12px);
+    padding: 16px 20px;
+    z-index: 99;
+    border-top: 1px solid var(--border);
+  }
+  .sticky-cta a {
+    display: block;
+    text-align: center;
+    background: var(--amber);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 16px;
+    padding: 15px;
+    border-radius: 12px;
+    text-decoration: none;
+  }
+
+  /* ANIMATIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 16px 20px; }
+    section { padding: 72px 20px; }
+    #hero { padding: 100px 20px 64px; }
+    .about-cards,
+    .speakers-grid,
+    .formats-grid,
+    .register-wrap { grid-template-columns: 1fr; }
+    .formats-grid { gap: 16px; }
+    .register-wrap { gap: 48px; }
+    footer { padding: 24px 20px; flex-direction: column; align-items: flex-start; }
+    .sticky-cta { display: block; }
+    body { padding-bottom: 72px; }
+    #cursor, #cursor-dot { display: none; }
+    body { cursor: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor">🐾</div>
+<div id="cursor-dot"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav__logo"><span>Yandex</span>&nbsp;Pet Day</a>
+  <a href="#register" class="btn-nav">Участвовать →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero__bg"></div>
+  <div class="hero__grid-overlay"></div>
+  <div class="hero__paw">🐾</div>
+  <div class="hero__paw">🐾</div>
+  <div class="hero__paw">🐾</div>
+
+  <div class="hero__meta">20 июня 2025 · Москва и онлайн · 11:00</div>
+  <h1 class="hero__title">Бизнес на питомцах<br>уже работает на <em>AI</em>.<br>Вы тоже можете.</h1>
+  <p class="hero__sub">Конференция про digital-продукты в зообизнесе. Реальные кейсы, тренды рынка и люди, которые его строят.</p>
+
+  <div class="hero__cta">
+    <a href="#register" class="btn-primary">Прийти офлайн</a>
+    <a href="#register" class="btn-secondary">Смотреть онлайн</a>
+    <span class="hero__note">⚠️ Офлайн-мест мало</span>
+  </div>
+
+  <div class="hero__countdown">
+    <div class="countdown__item">
+      <span class="countdown__num" id="cd-days">—</span>
+      <span class="countdown__label">дней</span>
+    </div>
+    <span class="countdown__divider">:</span>
+    <div class="countdown__item">
+      <span class="countdown__num" id="cd-hours">—</span>
+      <span class="countdown__label">часов</span>
+    </div>
+    <span class="countdown__divider">:</span>
+    <div class="countdown__item">
+      <span class="countdown__num" id="cd-mins">—</span>
+      <span class="countdown__label">минут</span>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <span class="section__label">О конференции</span>
+  <h2 class="section__title fade-in">Один день — и вы понимаете рынок, который растёт быстрее, чем вы думаете</h2>
+  <div class="about-cards">
+    <div class="about-card fade-in">
+      <span class="about-card__icon">🧠</span>
+      <div class="about-card__title">AI в ветеринарии</div>
+      <p class="about-card__text">Компьютерное зрение, диагностика, персонализация — как технологии меняют то, как мы следим за здоровьем животных</p>
+    </div>
+    <div class="about-card fade-in">
+      <span class="about-card__icon">📊</span>
+      <div class="about-card__title">Зооморфизм как продуктовый приём</div>
+      <p class="about-card__text">Почему пользователи платят больше, когда в интерфейсе есть питомец — и как монетизировать это без кринжа</p>
+    </div>
+    <div class="about-card fade-in">
+      <span class="about-card__icon">💰</span>
+      <div class="about-card__title">Монетизация pet-аудитории</div>
+      <p class="about-card__text">Новые рынки, форматы подписок, инвестиции — куда идут деньги и где точки роста в 2025</p>
+    </div>
+  </div>
+</section>
+
+<!-- SPEAKERS -->
+<section id="speakers">
+  <span class="section__label">Спикеры</span>
+  <h2 class="section__title fade-in">Говорят те, кто <em>делает</em>,<br>а не рассказывает</h2>
+  <div class="speakers-grid">
+    <div class="speaker-card fade-in">
+      <div class="speaker-card__avatar">🎙</div>
+      <span class="speaker-badge">Ведущий</span>
+      <div class="speaker-card__name">Андрей Соколов</div>
+      <div class="speaker-card__role">Head of Product Design, Яндекс</div>
+      <div class="speaker-card__topic"><strong>Тема:</strong> «Компьютерное зрение в ветеринарии»</div>
+    </div>
+    <div class="speaker-card fade-in">
+      <div class="speaker-card__avatar">🤖</div>
+      <div class="speaker-card__name">Мария Подольская</div>
+      <div class="speaker-card__role">Head of AI, Лаборатория инноваций</div>
+      <div class="speaker-card__topic"><strong>Тема:</strong> «Зооморфизм как драйвер лояльности»</div>
+    </div>
+    <div class="speaker-card fade-in">
+      <div class="speaker-card__avatar">🛒</div>
+      <div class="speaker-card__name">Павел Сидоров</div>
+      <div class="speaker-card__role">CEO, маркетплейс зоотоваров «Зоо-Маркет»</div>
+      <div class="speaker-card__topic"><strong>Тема:</strong> «От стартапа до маркетплейса №1: ошибки и победы»</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULE -->
+<section id="schedule">
+  <span class="section__label">Программа</span>
+  <h2 class="section__title fade-in">Без воды: от нетворкинга<br>до инвестиционной дискуссии</h2>
+  <div class="timeline">
+    <div class="timeline__item fade-in">
+      <div class="timeline__time">10:00 – 10:30</div>
+      <div class="timeline__content">
+        <div class="timeline__title">Приветственный кофе и нетворкинг <span class="timeline__tag">офлайн</span></div>
+        <div class="timeline__speaker">Участники и партнёры</div>
+      </div>
+    </div>
+    <div class="timeline__item fade-in">
+      <div class="timeline__time">11:00 – 11:30</div>
+      <div class="timeline__content">
+        <div class="timeline__title">Вводное слово</div>
+        <div class="timeline__speaker">Организаторы</div>
+      </div>
+    </div>
+    <div class="timeline__item fade-in">
+      <div class="timeline__time">11:30 – 12:10</div>
+      <div class="timeline__content">
+        <div class="timeline__title">«Компьютерное зрение в ветеринарии»</div>
+        <div class="timeline__speaker">Андрей Соколов — Head of Product Design, Яндекс</div>
+      </div>
+    </div>
+    <div class="timeline__item fade-in">
+      <div class="timeline__time">12:10 – 12:50</div>
+      <div class="timeline__content">
+        <div class="timeline__title">«Зооморфизм как драйвер лояльности»</div>
+        <div class="timeline__speaker">Мария Подольская — Head of AI, Лаборатория инноваций</div>
+      </div>
+    </div>
+    <div class="timeline__item fade-in">
+      <div class="timeline__time">12:50 – 13:10</div>
+      <div class="timeline__content">
+        <div class="timeline__title">Перерыв ☕</div>
+        <div class="timeline__speaker"></div>
+      </div>
+    </div>
+    <div class="timeline__item fade-in">
+      <div class="timeline__time">13:10 – 13:40</div>
+      <div class="timeline__content">
+        <div class="timeline__title">«От стартапа до маркетплейса №1: ошибки и победы»</div>
+        <div class="timeline__speaker">Павел Сидоров — CEO, Зоо-Маркет</div>
+      </div>
+    </div>
+    <div class="timeline__item fade-in">
+      <div class="timeline__time">13:40 – 15:00</div>
+      <div class="timeline__content">
+        <div class="timeline__title">Дискуссия «Инвестиции в Pet-tech: пузырь или новая нефть?»</div>
+        <div class="timeline__speaker">Все спикеры + модератор</div>
+      </div>
+    </div>
+    <div class="timeline__item fade-in">
+      <div class="timeline__time">15:00 – 16:30</div>
+      <div class="timeline__content">
+        <div class="timeline__title">Нетворкинг</div>
+        <div class="timeline__speaker">Академия, Ленинградский пр-т 36</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMATS -->
+<section id="formats">
+  <span class="section__label">Форматы участия</span>
+  <h2 class="section__title fade-in">Выберите удобный<br>формат — оба работают</h2>
+  <div class="formats-grid">
+    <div class="format-card format-card--offline fade-in">
+      <div class="format-card__badge">🏢 Офлайн</div>
+      <div class="format-card__title">Прийти лично</div>
+      <div class="format-card__location">📍 Москва, Ленинградский пр-т 36, ивент-пространство «Академия»</div>
+      <ul class="format-card__features">
+        <li>Закрытый бизнес-завтрак до начала программы</li>
+        <li>Живое общение со спикерами и участниками</li>
+        <li>Зона для питомцев: вода, миски, аксессуары</li>
+        <li>Именной сертификат участника</li>
+        <li>Записи всех докладов на 3 дня</li>
+      </ul>
+      <div class="format-card__warning">⚠️ Количество мест ограничено</div>
+      <a href="#register" class="btn-format">Занять место офлайн</a>
+    </div>
+    <div class="format-card format-card--online fade-in">
+      <div class="format-card__badge">🌐 Онлайн</div>
+      <div class="format-card__title">Подключиться удалённо</div>
+      <div class="format-card__location">Прямая трансляция из любой точки мира</div>
+      <ul class="format-card__features">
+        <li>Прямая трансляция всех докладов</li>
+        <li>Доступ к записям в течение 3 дней</li>
+        <li>Презентации и текстовые расшифровки</li>
+        <li>Именной сертификат участника</li>
+      </ul>
+      <a href="#register" class="btn-format" style="margin-top: 32px;">Зарегистрироваться онлайн</a>
+    </div>
+  </div>
+</section>
+
+<!-- AUDIENCE -->
+<section id="audience">
+  <span class="section__label">Кому это нужно</span>
+  <h2 class="section__title fade-in">Вы точно здесь, если...</h2>
+  <div class="audience-tags">
+    <div class="audience-tag fade-in"><span>🛒</span> Строите digital-продукт в зообизнесе</div>
+    <div class="audience-tag fade-in"><span>🚀</span> Хотите выйти на pet-рынок</div>
+    <div class="audience-tag fade-in"><span>💼</span> Ищете инвестиции или партнёров</div>
+    <div class="audience-tag fade-in"><span>📱</span> Работаете в маркетплейсах или ветклиниках</div>
+    <div class="audience-tag fade-in"><span>🎨</span> Дизайнер или разработчик в поиске новой вертикали</div>
+    <div class="audience-tag fade-in"><span>📈</span> Инвестор, смотрящий на альтернативные рынки</div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <span class="section__label">Вопросы и ответы</span>
+  <h2 class="section__title fade-in">Вопросы, которые<br>уже задали до вас</h2>
+  <div class="faq-list">
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Можно прийти с питомцем?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">Да, если выбираете офлайн. Мы организуем специальную зону с водой, мисками и всем необходимым. Но заранее убедитесь, что питомец социализирован и комфортно чувствует себя в обществе людей. О наличии питомца нужно предупредить при регистрации.</div>
+      </div>
+    </div>
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Будут ли записи для онлайн-участников?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">Да. Все зарегистрированные получат доступ к видеозаписям, презентациям и текстовым расшифровкам в течение 3 дней после конференции. Доступ остаётся у вас навсегда.</div>
+      </div>
+    </div>
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Я из другого города. Есть смысл ехать в Москву?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">Зависит от целей. Если нужен контент — онлайн-формата достаточно. Если ищете партнёров, инвесторов или хотите «вживую» пообщаться с лидерами рынка — приезжайте. Офлайн-участников ждёт закрытый бизнес-завтрак и неформальное общение после основной программы.</div>
+      </div>
+    </div>
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Будет ли сертификат?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">Да, все участники — и офлайн, и онлайн — получают именной сертификат участника конференции Yandex Pet Day 2025.</div>
+      </div>
+    </div>
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Кому точно стоит прийти?
+        <div class="faq-icon">+</div>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">Владельцам и сотрудникам digital-продуктов в зообизнесе: маркетплейсам, ветклиникам, приложениям для груминга, зоомагазинам, агрегаторам. А также маркетологам, продактам, дизайнерам и разработчикам, которые хотят зайти в этот быстрорастущий рынок.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTER -->
+<section id="register">
+  <div class="register-wrap">
+    <div>
+      <span class="section__label">Регистрация</span>
+      <h2 class="register__title">Зарегистрируйтесь<br><em>сейчас</em></h2>
+      <p class="register__sub">Онлайн-участникам пришлём ссылку за час до начала. Офлайн — места пока есть, но ненадолго.</p>
+      <ul class="register__perks">
+        <li>Доступ к записям 3 дня после события</li>
+        <li>Именной сертификат участника</li>
+        <li>Презентации и расшифровки спикеров</li>
+        <li>Для офлайн: закрытый бизнес-завтрак</li>
+      </ul>
+    </div>
+    <div>
+      <div class="register-form">
+        <div class="form-group">
+          <label class="form-label">Имя</label>
+          <input type="text" class="form-input" placeholder="Как к вам обращаться">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" class="form-input" placeholder="your@email.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Формат участия</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input type="radio" name="format" value="offline" checked>
+              🏢 Офлайн
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="format" value="online">
+              🌐 Онлайн
+            </label>
+          </div>
+        </div>
+        <button class="form-submit" onclick="handleSubmit(event)">Участвовать →</button>
+        <p class="form-legal">Нажимая кнопку, вы соглашаетесь с <a href="#">политикой конфиденциальности</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer__logo"><span>Yandex</span> Pet Day</a>
+  <div class="footer__links">
+    <a href="#">Политика конфиденциальности</a>
+    <a href="#">Контакты</a>
+  </div>
+  <div class="footer__copy">© Yandex Pet Day, 2025</div>
+</footer>
+
+<!-- STICKY MOBILE CTA -->
+<div class="sticky-cta">
+  <a href="#register">Участвовать →</a>
+</div>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const dot = document.getElementById('cursor-dot');
+  let cursorX = 0, cursorY = 0, dotX = 0, dotY = 0;
+  document.addEventListener('mousemove', e => {
+    dotX = e.clientX; dotY = e.clientY;
+    dot.style.left = dotX + 'px';
+    dot.style.top = dotY + 'px';
+    cursorX += (dotX - cursorX) * 0.12;
+    cursorY += (dotY - cursorY) * 0.12;
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+  });
+  function animateCursor() {
+    cursorX += (dotX - cursorX) * 0.12;
+    cursorY += (dotY - cursorY) * 0.12;
+    cursor.style.left = cursorX + 'px';
+    cursor.style.top = cursorY + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+
+  // Countdown
+  function updateCountdown() {
+    const target = new Date('2025-06-20T11:00:00+03:00');
+    const now = new Date();
+    const diff = target - now;
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '0';
+      document.getElementById('cd-hours').textContent = '0';
+      document.getElementById('cd-mins').textContent = '0';
+      return;
+    }
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    document.getElementById('cd-days').textContent = days;
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cd-mins').textContent = String(mins).padStart(2, '0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 60000);
+
+  // FAQ
+  function toggleFaq(el) {
+    const item = el.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // Scroll animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+  // Form submit
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target;
+    btn.textContent = '✓ Готово! Проверьте почту';
+    btn.style.background = '#2ECC71';
+    btn.disabled = true;
+  }
+</script>
+</body>
+</html>
